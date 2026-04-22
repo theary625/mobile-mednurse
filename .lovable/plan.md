@@ -1,36 +1,55 @@
 
-The user wants to add 2026 award entries alongside the existing 2025 awards on the landing page. Looking at TrustSection.tsx, I can see it currently displays 2 award cards from CMS content (`content.award1*` and `content.award2*`). The TrustSection is CMS-driven via `useTrustContent` hook.
 
-Let me check the trust content hook structure to understand how to extend it.
+## Goal
 
-I need to inspect `useTrustContent` and the admin editor to add 2 new award cards for 2026 while keeping 2025 intact.
+Create a test user account (`test@gmail.com` / `test1234`) you can sign in with immediately, with email confirmation bypassed so you don't need to click a verification link.
 
-## Plan: Add 2026 Award Cards to Trust Section
+## What I'll do
 
-**Goal:** Add two new award entries for 2026 ("Winner: Best Medical Safety Platform 2026" and "Excellence in Clinical Innovation 2026") alongside the existing 2025 awards, matching styling exactly.
+1. **Insert the auth user via SQL migration** — use Supabase's `auth.users` table with a pre-confirmed email (`email_confirmed_at = now()`) and a bcrypt-hashed password for `test1234`. The existing `handle_new_user` trigger will automatically create the matching row in `public.profiles` and assign the default `user` role in `public.user_roles`.
+2. **Pass user metadata** so the profile has sensible defaults:
+   - `first_name`: "Test"
+   - `last_name`: "User"
+   - `full_name`: "Test User"
+   - `country`: "United States"
+3. **Verify** by reading back from `auth.users`, `public.profiles`, and `public.user_roles` to confirm all three rows exist and are linked.
 
-### Files to modify
+## Technical details
 
-**1. `src/hooks/useTrustContent.ts`**
-- Extend the `TrustContent` interface with 4 new fields: `award3Badge`, `award3Title`, `award3Subtitle`, `award4Badge`, `award4Title`, `award4Subtitle`
-- Add defaults:
-  - Award 3: Badge "Winner 2026", Title "Best Medical Safety Platform 2026", Subtitle "Healthcare & Pharmaceutical Awards"
-  - Award 4: Badge "Excellence 2026", Title "Excellence in Clinical Innovation 2026", Subtitle "Healthcare & Pharmaceutical Awards"
+The migration will run roughly:
 
-**2. `src/components/TrustSection.tsx`**
-- Change the award cards grid from `md:grid-cols-2` (2 cards) to `md:grid-cols-2` with 4 cards total (2 rows of 2 on desktop, stacked on mobile)
-- Duplicate the existing 2 award card blocks to create cards 3 and 4, using the new `content.award3*` and `content.award4*` fields
-- Keep styling identical: card 3 uses the amber/gold gradient (matching card 1), card 4 uses the teal gradient (matching card 2)
-- Preserve all animations, hover states, icons (Trophy), and transition delays (add delays `delay-[700ms]` and `delay-[800ms]` for the new cards)
+```sql
+INSERT INTO auth.users (
+  instance_id, id, aud, role, email,
+  encrypted_password, email_confirmed_at,
+  raw_app_meta_data, raw_user_meta_data,
+  created_at, updated_at,
+  confirmation_token, email_change, email_change_token_new, recovery_token
+)
+VALUES (
+  '00000000-0000-0000-0000-000000000000',
+  gen_random_uuid(),
+  'authenticated', 'authenticated',
+  'test@gmail.com',
+  crypt('test1234', gen_salt('bf')),
+  now(),
+  '{"provider":"email","providers":["email"]}'::jsonb,
+  '{"first_name":"Test","last_name":"User","full_name":"Test User","country":"United States"}'::jsonb,
+  now(), now(),
+  '', '', '', ''
+);
+```
 
-**3. `src/components/admin/marketing/sections/TrustSectionEditor.tsx`** (if it exists — will verify)
-- Add input fields for the 4 new properties so admins can edit 2026 award copy via CMS
+The `handle_new_user` trigger on `auth.users` already in this project will fire and populate `public.profiles` + `public.user_roles` automatically — no extra inserts needed.
 
-### What stays the same
-- Section layout, hero image, badge text, headline, subheadline
-- Existing 2025 award cards (untouched)
-- All other landing page sections, navigation, and global styles
-- Animations, gradients, icons, and font choices
+## Important notes
 
-### Visual result
-The Trust Section will show 4 award cards in a 2x2 grid: 2025 awards on top row, 2026 awards on bottom row, all with identical styling.
+- **`test1234` is 8 characters and weak.** It will work for sign-in here, but if Leaked Password Protection (HIBP) is ever enabled on this project, this password will be rejected on future password changes. Fine for a throwaway test account.
+- **`test@gmail.com` is a real-looking address you don't own.** Don't use this account for anything that triggers outbound email (password reset, notifications) — those emails would go to whoever actually owns that Gmail address. For a safer test, consider `test@example.com` instead. Tell me if you'd prefer that and I'll swap it.
+- This only inserts the auth user + auto-created profile/role. It does **not** create a `clinician_profiles` row or mark the welcome tour complete — first sign-in will route through the normal onboarding flow, which is probably what you want for testing.
+- No frontend code changes. Only a database migration.
+
+## After approval
+
+Switch to default mode → run one migration → verify the three rows exist → you can sign in at `/auth` with `test@gmail.com` / `test1234`.
+
