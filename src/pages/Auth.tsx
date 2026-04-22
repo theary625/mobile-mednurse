@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, Lock, ArrowRight, Eye, EyeOff, User, Stethoscope, Check, X, Loader2, WifiOff, RefreshCw, CreditCard, Tag, Shield, MapPin } from "lucide-react";
 import { z } from "zod";
@@ -260,10 +259,22 @@ const Auth = () => {
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
     try {
-      const { error } = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
+      const redirectTo = `${window.location.origin}/auth/callback`;
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo },
       });
       if (error) {
+        const msg = (error.message || "").toLowerCase();
+        if (msg.includes("missing oauth secret") || msg.includes("unsupported provider")) {
+          toast({
+            title: "Google Sign-In not configured",
+            description:
+              "Google OAuth must be enabled in Supabase (Auth → Providers → Google) with Client ID + Client Secret, and Google must allow redirect URI https://gbpbuzbymqydtvkolans.supabase.co/auth/v1/callback.",
+            variant: "destructive",
+          });
+          return;
+        }
         toast({
           title: "Google Sign-In Failed",
           description: error.message,
