@@ -28,9 +28,10 @@ export function MobileBottomNav({ alertsCount = 0 }: { alertsCount?: number }) {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/60 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
-      <div className="mx-auto max-w-md px-2">
-        <ul className="grid grid-cols-6 py-2">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 pb-[env(safe-area-inset-bottom)]">
+      <div className="mx-auto max-w-md px-3 pb-2">
+        <div className="rounded-3xl border border-border/70 bg-background/95 shadow-[0_-8px_30px_rgba(0,0,0,0.10)] backdrop-blur supports-[backdrop-filter]:bg-background/80">
+          <ul className="grid grid-cols-6 px-1 py-2">
           {items.map((item) => {
             const active = isActive(location.pathname, item.to);
             const Icon = item.icon;
@@ -40,7 +41,7 @@ export function MobileBottomNav({ alertsCount = 0 }: { alertsCount?: number }) {
                 <Link
                   to={item.to}
                   className={cn(
-                    "relative flex flex-col items-center justify-center gap-1 rounded-xl px-2 py-1.5 text-xs transition-colors",
+                    "relative flex flex-col items-center justify-center gap-1 rounded-2xl px-2 py-2 text-[11px] font-medium transition-colors",
                     active ? "text-primary" : "text-muted-foreground hover:text-foreground"
                   )}
                 >
@@ -49,7 +50,7 @@ export function MobileBottomNav({ alertsCount = 0 }: { alertsCount?: number }) {
                   {showBadge && (
                     <Badge
                       variant="destructive"
-                      className="absolute -top-1 right-1 h-5 min-w-5 justify-center rounded-full px-1 text-[10px]"
+                      className="absolute top-1 right-2 h-5 min-w-5 justify-center rounded-full px-1 text-[10px]"
                     >
                       {item.badgeCount}
                     </Badge>
@@ -58,9 +59,9 @@ export function MobileBottomNav({ alertsCount = 0 }: { alertsCount?: number }) {
               </li>
             );
           })}
-        </ul>
+          </ul>
+        </div>
       </div>
     </nav>
   );
 }
-

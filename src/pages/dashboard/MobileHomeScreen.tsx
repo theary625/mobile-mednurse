@@ -31,7 +31,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-const MobileHomeScreen = () => {
+const MobileHomeScreen = ({ embedded = false }: { embedded?: boolean }) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -283,10 +283,219 @@ const MobileHomeScreen = () => {
     { icon: AlertTriangle, label: "High-Risk Alerts", to: "/dashboard/alerts", danger: true },
   ];
 
+  const content = (
+    <>
+      {/* Premium Identity Section */}
+      <section className="flex flex-col items-center pt-8 pb-10 animate-fade-in">
+        {/* Avatar with subtle ring */}
+        <div className="relative mb-5">
+          {/* Subtle ring */}
+          <div className="absolute -inset-1 bg-border rounded-full" />
+
+          {/* Avatar container */}
+          <div className="relative w-28 h-28 rounded-full overflow-hidden bg-card shadow-xl border-4 border-card transition-transform duration-500 hover:scale-105">
+            <img src={avatarUrl || edithMascot} alt={userName} className="w-full h-full object-cover" />
+          </div>
+
+          {/* Status indicator */}
+          <div className="absolute bottom-1 right-1 w-5 h-5 bg-green-500 rounded-full border-3 border-card shadow-lg" />
+        </div>
+
+        {/* Name with premium typography */}
+        <h1 className="text-2xl font-bold text-foreground tracking-tight font-serif">{userName}</h1>
+
+        {/* Role badge */}
+        <div className="mt-2 px-4 py-1.5 bg-muted rounded-full border border-border">
+          <p className="text-sm font-medium text-foreground tracking-wide">{userRole}</p>
+        </div>
+
+        {/* Clinical Background - Inline */}
+        <div className="flex items-center gap-6 mt-5">
+          <div className="text-center">
+            <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Experience</p>
+            <p className="text-lg font-bold text-foreground">
+              {yearsExperience !== null ? yearsExperience : "—"}{" "}
+              <span className="text-sm font-medium text-muted-foreground">
+                {yearsExperience === 1 ? "Year" : "Years"}
+              </span>
+            </p>
+          </div>
+          <div className="w-px h-8 bg-border" />
+          <div className="text-center">
+            <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Education</p>
+            <p className="text-lg font-bold text-foreground">{education || "—"}</p>
+          </div>
+        </div>
+
+        <p className="text-xs text-muted-foreground mt-4 tracking-wider uppercase">
+          Supporting safer medication decisions
+        </p>
+      </section>
+
+      {/* Premium Impact & Community Card */}
+      <section className="mb-7 animate-fade-in" style={{ animationDelay: "0.1s" }}>
+        <div className="relative overflow-hidden bg-card rounded-3xl shadow-lg border border-border transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
+          {/* Top accent line */}
+          <div className="absolute inset-x-0 top-0 h-1 bg-foreground/10" />
+
+          <div className="relative p-6">
+            <h2 className="text-xs font-bold text-muted-foreground tracking-[0.2em] uppercase mb-6 flex items-center justify-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center">
+                <Shield className="w-4 h-4 text-foreground" />
+              </div>
+              Your Impact with MedNurse
+            </h2>
+
+            <div className="grid grid-cols-3 gap-3">
+              {/* My Errors Prevented */}
+              <div className="text-center group">
+                <div className="inline-flex flex-col items-center">
+                  <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300">
+                    <Shield className="w-5 h-5 text-foreground" />
+                  </div>
+                  <span className="text-2xl font-bold text-foreground tracking-tight">
+                    {isLoading ? "—" : myErrorsPrevented}
+                  </span>
+                  <p className="text-[10px] text-muted-foreground mt-1 leading-tight">
+                    Errors<br />
+                    <span className="font-semibold text-foreground">I Prevented</span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Community Prevented */}
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link to="/" className="text-center group cursor-pointer">
+                      <div className="inline-flex flex-col items-center">
+                        <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300">
+                          <Users className="w-5 h-5 text-foreground" />
+                        </div>
+                        <span className="text-2xl font-bold text-foreground tracking-tight">
+                          {isLoading ? "—" : communityErrorsPrevented.toLocaleString()}
+                        </span>
+                        <p className="text-[10px] text-muted-foreground mt-1 leading-tight">
+                          <span className="font-semibold text-foreground">Community</span>
+                          <br />
+                          Prevented
+                        </p>
+                      </div>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>See the total community impact on our landing page</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+
+              {/* Combined Streak */}
+              <div className="text-center group">
+                <div className="inline-flex flex-col items-center relative">
+                  <div
+                    className={`w-10 h-10 rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300 ${
+                      currentStreak > 0 ? "bg-orange-500/20" : getStreakMilestone(maxStreak)?.bgColor || "bg-muted"
+                    }`}
+                  >
+                    <Flame
+                      className={`w-5 h-5 ${
+                        currentStreak > 0
+                          ? "text-orange-500 animate-pulse"
+                          : getStreakMilestone(maxStreak)?.color || "text-foreground"
+                      }`}
+                    />
+                  </div>
+                  <div className="flex items-baseline gap-0.5">
+                    <span
+                      className={`text-2xl font-bold tracking-tight ${
+                        currentStreak > 0 ? "text-orange-500" : "text-foreground"
+                      }`}
+                    >
+                      {isLoading ? "—" : currentStreak}
+                    </span>
+                    <span className="text-muted-foreground text-xs">/</span>
+                    <span className="text-base font-semibold text-muted-foreground">{isLoading ? "—" : maxStreak}</span>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground mt-1 leading-tight">
+                    <span className={`font-semibold ${currentStreak > 0 ? "text-orange-500" : "text-foreground"}`}>
+                      Now
+                    </span>{" "}
+                    / Best
+                  </p>
+                  {/* Active indicator or Milestone Badge */}
+                  {!isLoading && currentStreak > 0 && (
+                    <span className="text-[8px] text-orange-500 font-medium mt-1">🔥 Active</span>
+                  )}
+                  {!isLoading && currentStreak === 0 && getStreakMilestone(maxStreak) && (
+                    <div className={`mt-1 px-1.5 py-0.5 rounded-full flex items-center gap-0.5 ${getStreakMilestone(maxStreak)!.bgColor}`}>
+                      {(() => {
+                        const milestone = getStreakMilestone(maxStreak)!;
+                        const Icon = milestone.icon;
+                        return <Icon className={`w-2.5 h-2.5 ${milestone.color}`} />;
+                      })()}
+                      <span className={`text-[8px] font-semibold ${getStreakMilestone(maxStreak)!.color}`}>
+                        {getStreakMilestone(maxStreak)!.label}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Subtle message */}
+            <p className="text-center text-xs text-muted-foreground mt-5 pt-4 border-t border-border">
+              Every check contributes to safer patient care
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Premium Quick Access Section */}
+      <section className="animate-fade-in" style={{ animationDelay: "0.2s" }}>
+        <h2 className="text-xs font-bold text-muted-foreground tracking-[0.2em] uppercase mb-4 text-center">Quick Access</h2>
+
+        <div className="grid grid-cols-2 gap-3">
+          {quickAccessItems.map((item, index) => (
+            <Link
+              key={item.label}
+              to={item.to}
+              className="group relative overflow-hidden bg-card rounded-2xl p-5 shadow-md border border-border transition-all duration-300 hover:shadow-xl hover:-translate-y-1 active:scale-[0.98]"
+              style={{ animationDelay: `${0.3 + index * 0.1}s` }}
+            >
+              {/* Background accent on hover */}
+              <div
+                className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
+                  item.danger ? "bg-destructive/5" : "bg-primary/5"
+                }`}
+              />
+
+              <div className="relative flex flex-col items-center gap-3">
+                <div
+                  className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${
+                    item.danger ? "bg-destructive/10 text-destructive" : "bg-muted text-foreground"
+                  }`}
+                >
+                  <item.icon className="w-7 h-7" />
+                </div>
+                <span className={`text-sm font-medium text-center leading-tight ${item.danger ? "text-destructive" : "text-foreground"}`}>
+                  {item.label}
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+    </>
+  );
+
+  if (embedded) {
+    return <div className="space-y-6">{content}</div>;
+  }
+
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-md mx-auto relative">
       {/* Header with Sidebar Trigger */}
-      <header className="sticky top-0 z-40 flex items-center justify-between px-4 py-3 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80 border-b border-border shadow-sm">
+      <header className="sticky top-0 z-40 flex items-center justify-between px-4 py-3 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80 border-b border-border shadow-sm pt-[env(safe-area-inset-top)]">
         {/* Left: Logo as Sidebar Trigger */}
         <div className="relative">
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -396,207 +605,7 @@ const MobileHomeScreen = () => {
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Premium Identity Section */}
-        <section className="flex flex-col items-center pt-8 pb-10 animate-fade-in">
-          {/* Avatar with subtle ring */}
-          <div className="relative mb-5">
-            {/* Subtle ring */}
-            <div className="absolute -inset-1 bg-border rounded-full" />
-            
-            {/* Avatar container */}
-            <div className="relative w-28 h-28 rounded-full overflow-hidden bg-card shadow-xl border-4 border-card transition-transform duration-500 hover:scale-105">
-              <img 
-                src={avatarUrl || edithMascot} 
-                alt={userName} 
-                className="w-full h-full object-cover"
-              />
-            </div>
-            
-            {/* Status indicator */}
-            <div className="absolute bottom-1 right-1 w-5 h-5 bg-green-500 rounded-full border-3 border-card shadow-lg" />
-          </div>
-          
-          {/* Name with premium typography */}
-          <h1 className="text-2xl font-bold text-foreground tracking-tight font-serif">
-            {userName}
-          </h1>
-          
-          {/* Role badge */}
-          <div className="mt-2 px-4 py-1.5 bg-muted rounded-full border border-border">
-            <p className="text-sm font-medium text-foreground tracking-wide">
-              {userRole}
-            </p>
-          </div>
-
-          {/* Clinical Background - Inline */}
-          <div className="flex items-center gap-6 mt-5">
-            <div className="text-center">
-              <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">
-                Experience
-              </p>
-              <p className="text-lg font-bold text-foreground">
-                {yearsExperience !== null ? yearsExperience : "—"} <span className="text-sm font-medium text-muted-foreground">{yearsExperience === 1 ? "Year" : "Years"}</span>
-              </p>
-            </div>
-            <div className="w-px h-8 bg-border" />
-            <div className="text-center">
-              <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">
-                Education
-              </p>
-              <p className="text-lg font-bold text-foreground">
-                {education || "—"}
-              </p>
-            </div>
-          </div>
-          
-          <p className="text-xs text-muted-foreground mt-4 tracking-wider uppercase">
-            Supporting safer medication decisions
-          </p>
-        </section>
-
-        {/* Premium Impact & Community Card */}
-        <section className="mb-7 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-          <div className="relative overflow-hidden bg-card rounded-3xl shadow-lg border border-border transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
-            {/* Top accent line */}
-            <div className="absolute inset-x-0 top-0 h-1 bg-foreground/10" />
-            
-            <div className="relative p-6">
-              <h2 className="text-xs font-bold text-muted-foreground tracking-[0.2em] uppercase mb-6 flex items-center justify-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center">
-                  <Shield className="w-4 h-4 text-foreground" />
-                </div>
-                Your Impact with MedNurse
-              </h2>
-              
-              <div className="grid grid-cols-3 gap-3">
-                {/* My Errors Prevented */}
-                <div className="text-center group">
-                  <div className="inline-flex flex-col items-center">
-                    <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300">
-                      <Shield className="w-5 h-5 text-foreground" />
-                    </div>
-                    <span className="text-2xl font-bold text-foreground tracking-tight">
-                      {isLoading ? "—" : myErrorsPrevented}
-                    </span>
-                    <p className="text-[10px] text-muted-foreground mt-1 leading-tight">
-                      Errors<br /><span className="font-semibold text-foreground">I Prevented</span>
-                    </p>
-                  </div>
-                </div>
-
-                {/* Community Prevented */}
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Link to="/" className="text-center group cursor-pointer">
-                        <div className="inline-flex flex-col items-center">
-                          <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300">
-                            <Users className="w-5 h-5 text-foreground" />
-                          </div>
-                          <span className="text-2xl font-bold text-foreground tracking-tight">
-                            {isLoading ? "—" : communityErrorsPrevented.toLocaleString()}
-                          </span>
-                          <p className="text-[10px] text-muted-foreground mt-1 leading-tight">
-                            <span className="font-semibold text-foreground">Community</span><br />Prevented
-                          </p>
-                        </div>
-                      </Link>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>See the total community impact on our landing page</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-
-                {/* Combined Streak */}
-                <div className="text-center group">
-                  <div className="inline-flex flex-col items-center relative">
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300 ${
-                      currentStreak > 0 ? 'bg-orange-500/20' : getStreakMilestone(maxStreak)?.bgColor || 'bg-muted'
-                    }`}>
-                      <Flame className={`w-5 h-5 ${
-                        currentStreak > 0 ? 'text-orange-500 animate-pulse' : getStreakMilestone(maxStreak)?.color || 'text-foreground'
-                      }`} />
-                    </div>
-                    <div className="flex items-baseline gap-0.5">
-                      <span className={`text-2xl font-bold tracking-tight ${
-                        currentStreak > 0 ? 'text-orange-500' : 'text-foreground'
-                      }`}>
-                        {isLoading ? "—" : currentStreak}
-                      </span>
-                      <span className="text-muted-foreground text-xs">/</span>
-                      <span className="text-base font-semibold text-muted-foreground">
-                        {isLoading ? "—" : maxStreak}
-                      </span>
-                    </div>
-                    <p className="text-[10px] text-muted-foreground mt-1 leading-tight">
-                      <span className={`font-semibold ${currentStreak > 0 ? 'text-orange-500' : 'text-foreground'}`}>Now</span> / Best
-                    </p>
-                    {/* Active indicator or Milestone Badge */}
-                    {!isLoading && currentStreak > 0 && (
-                      <span className="text-[8px] text-orange-500 font-medium mt-1">🔥 Active</span>
-                    )}
-                    {!isLoading && currentStreak === 0 && getStreakMilestone(maxStreak) && (
-                      <div className={`mt-1 px-1.5 py-0.5 rounded-full flex items-center gap-0.5 ${getStreakMilestone(maxStreak)!.bgColor}`}>
-                        {(() => {
-                          const milestone = getStreakMilestone(maxStreak)!;
-                          const Icon = milestone.icon;
-                          return <Icon className={`w-2.5 h-2.5 ${milestone.color}`} />;
-                        })()}
-                        <span className={`text-[8px] font-semibold ${getStreakMilestone(maxStreak)!.color}`}>
-                          {getStreakMilestone(maxStreak)!.label}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              
-              {/* Subtle message */}
-              <p className="text-center text-xs text-muted-foreground mt-5 pt-4 border-t border-border">
-                Every check contributes to safer patient care
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Premium Quick Access Section */}
-        <section className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
-          <h2 className="text-xs font-bold text-muted-foreground tracking-[0.2em] uppercase mb-4 text-center">
-            Quick Access
-          </h2>
-          
-          <div className="grid grid-cols-2 gap-3">
-            {quickAccessItems.map((item, index) => (
-              <Link
-                key={item.label}
-                to={item.to}
-                className="group relative overflow-hidden bg-card rounded-2xl p-5 shadow-md border border-border transition-all duration-300 hover:shadow-xl hover:-translate-y-1 active:scale-[0.98]"
-                style={{ animationDelay: `${0.3 + index * 0.1}s` }}
-              >
-                {/* Background accent on hover */}
-                <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
-                  item.danger ? 'bg-destructive/5' : 'bg-primary/5'
-                }`} />
-                
-                <div className="relative flex flex-col items-center gap-3">
-                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${
-                    item.danger 
-                      ? 'bg-destructive/10 text-destructive' 
-                      : 'bg-muted text-foreground'
-                  }`}>
-                    <item.icon className="w-7 h-7" />
-                  </div>
-                  <span className={`text-sm font-medium text-center leading-tight ${
-                    item.danger ? 'text-destructive' : 'text-foreground'
-                  }`}>
-                    {item.label}
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
+        {content}
       </main>
     </div>
   );

@@ -80,7 +80,7 @@ const Dashboard = () => {
       <UserProfileProvider>
         <Routes>
           <Route element={<MobileDashboardLayout />}>
-            <Route path="/" element={<MobileHomeScreen />} />
+            <Route path="/" element={<MobileHomeScreen embedded />} />
             <Route path="/meds" element={<MedicationsPage />} />
             <Route path="/medications" element={<Navigate to="/dashboard/meds" replace />} />
             <Route path="/calculate" element={<CalculatePage profile={profile} />} />

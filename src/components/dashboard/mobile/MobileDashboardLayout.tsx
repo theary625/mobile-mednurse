@@ -44,7 +44,7 @@ export function MobileDashboardLayout({ children }: { children?: ReactNode }) {
 
   return (
     <div className="min-h-screen bg-muted">
-      <header className="sticky top-0 z-40 border-b border-border/60 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
+      <header className="sticky top-0 z-40 border-b border-border/60 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80 pt-[env(safe-area-inset-top)]">
         <div className="mx-auto flex h-14 max-w-md items-center justify-between px-3">
           <div className="flex items-center gap-2">
             <div className="h-2 w-2 rounded-full bg-success" />
