@@ -1,0 +1,307 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* MedNurse Color Palette */
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+    
+    /* Calculate Page Theme Colors */
+    --cream: 40 23% 96%;
+    --navy: 213 75% 17%;
+    --crimson: 354 60% 50%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 213 52% 24%;
+    --primary-foreground: 210 40% 98%;
+    --primary-light: 213 40% 30%;
+    --primary-dark: 213 55% 19%;
+    --primary-glow: 213 52% 24%;
+    
+    /* MedNurse Brand Blue - #1E3A5F */
+    --brand: 213 52% 24%;
+    --brand-foreground: 0 0% 100%;
+    --brand-light: 213 45% 35%;
+    --brand-dark: 213 58% 18%;
+    
+    /* MedNurse Brand Red (Heart) - #C41E3A */
+    --brand-accent: 350 73% 44%;
+    --brand-accent-foreground: 0 0% 100%;
+    --brand-accent-light: 350 70% 54%;
+    --brand-accent-dark: 350 75% 34%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222 47% 11%;
+
+    --accent: 0 66% 47%;
+    --accent-foreground: 0 0% 100%;
+    --accent-light: 0 66% 57%;
+    --accent-dark: 0 66% 37%;
+
+    --success: 160 84% 39%;
+    --success-foreground: 0 0% 100%;
+
+    --info: 217 91% 60%;
+    --info-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215 16% 47%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 213 52% 24%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Custom shadows */
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.1);
+    --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
+  }
+
+  .dark {
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+
+    /* Calculate Page Theme Colors - Dark Mode */
+    --cream: 222 47% 14%;
+    --navy: 210 40% 90%;
+    --crimson: 354 60% 60%;
+
+    --card: 222 47% 14%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 14%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222 47% 11%;
+
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 20%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 0 84% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 33% 22%;
+    --input: 217 33% 22%;
+    --ring: 212 27% 84%;
+
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 210 40% 90%;
+    --sidebar-primary: 210 40% 98%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 217 33% 17%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 22%;
+    --sidebar-ring: 212 27% 84%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+}
+
+@layer components {
+  .gradient-primary {
+    @apply bg-gradient-to-r from-primary to-primary-light;
+  }
+
+  .gradient-accent {
+    @apply bg-gradient-to-r from-accent to-accent-light;
+  }
+
+  .gradient-brand {
+    @apply bg-gradient-to-r from-brand to-brand-light;
+  }
+
+  .gradient-brand-accent {
+    @apply bg-gradient-to-r from-brand-accent to-brand-accent-light;
+  }
+
+  .gradient-brand-hero {
+    background: linear-gradient(135deg, hsl(var(--brand)) 0%, hsl(var(--brand-dark)) 50%, hsl(var(--brand-accent-dark)) 100%);
+  }
+
+  .gradient-brand-cta {
+    background: linear-gradient(90deg, hsl(var(--brand)) 0%, hsl(var(--brand-accent)) 100%);
+  }
+
+  .gradient-brand-cta-hover {
+    background: linear-gradient(90deg, hsl(var(--brand-dark)) 0%, hsl(var(--brand-accent-dark)) 100%);
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-light;
+  }
+
+  .text-gradient-brand {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(90deg, hsl(var(--brand)) 0%, hsl(var(--brand-accent)) 100%);
+  }
+
+  .glass-effect {
+    @apply bg-card/95 backdrop-blur-xl;
+  }
+}
+
+.dark .glass-effect {
+  @apply bg-card/90 backdrop-blur-xl;
+}
+
+@layer utilities {
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+
+  .animate-pop {
+    animation: pop 0.5s ease-out 1s both;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 3s ease-in-out infinite;
+  }
+
+  .animate-glow-pulse {
+    animation: glowPulse 2s ease-in-out infinite;
+  }
+
+  .animate-float-slow {
+    animation: floatSlow 6s ease-in-out infinite;
+  }
+
+  .animate-sparkle {
+    animation: sparkle 2s ease-in-out infinite;
+  }
+
+  .animate-gradient-shift {
+    animation: gradientShift 4s ease infinite;
+    background-size: 200% 200%;
+  }
+
+  .shimmer-overlay {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shimmer-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      110deg,
+      transparent 25%,
+      rgba(255, 215, 0, 0.15) 50%,
+      transparent 75%
+    );
+    animation: shimmerSlide 3s ease-in-out infinite;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-8px) rotate(1deg); }
+  50% { transform: translateY(-12px) rotate(0deg); }
+  75% { transform: translateY(-6px) rotate(-1deg); }
+}
+
+@keyframes pop {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes shimmerSlide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes glowPulse {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.3), 
+                0 0 40px rgba(251, 191, 36, 0.2),
+                0 0 60px rgba(251, 191, 36, 0.1);
+  }
+  50% { 
+    box-shadow: 0 0 30px rgba(251, 191, 36, 0.5), 
+                0 0 60px rgba(251, 191, 36, 0.3),
+                0 0 90px rgba(251, 191, 36, 0.2);
+  }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes scrollPhone {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
+.animate-scroll-phone {
+  animation: scrollPhone 60s linear infinite;
+}

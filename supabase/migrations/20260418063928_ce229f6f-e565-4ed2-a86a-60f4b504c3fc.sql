@@ -1,0 +1,1 @@
+UPDATE marketing_sections SET content = jsonb_set(content::jsonb, '{badgeText}', '"Healthcare & Pharmaceutical Awards"') WHERE section_key='trust' AND page_id=(SELECT id FROM marketing_pages WHERE slug='landing');

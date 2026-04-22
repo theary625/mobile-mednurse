@@ -1,0 +1,36 @@
+# MedNurse Robots.txt
+# https://mednurse.com
+
+# Sitemap location
+Sitemap: https://mednurse.com/sitemap.xml
+
+# Google
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 2
+
+# Social Media Crawlers
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+# All other bots
+User-agent: *
+Allow: /
+Crawl-delay: 2
+
+# Block admin and auth pages from indexing
+Disallow: /admin
+Disallow: /auth
+Disallow: /onboarding
+Disallow: /dashboard
