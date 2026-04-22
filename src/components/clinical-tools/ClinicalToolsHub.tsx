@@ -508,10 +508,19 @@ const ClinicalToolsHub = () => {
         .select('tool_id, is_visible');
       
       if (!error && data) {
-        const visibleIds = new Set(
-          data.filter(t => t.is_visible).map(t => t.tool_id)
-        );
-        setVisibleToolIds(visibleIds);
+        // If there are no rows yet (fresh DB) or none are marked visible, default to showing all tools.
+        if (data.length === 0) {
+          setVisibleToolIds(new Set(allTools.map(t => t.id)));
+          return;
+        }
+
+        const visible = data.filter(t => t.is_visible).map(t => t.tool_id);
+        if (visible.length === 0) {
+          setVisibleToolIds(new Set(allTools.map(t => t.id)));
+          return;
+        }
+
+        setVisibleToolIds(new Set(visible));
       } else {
         // If fetch fails, show all tools
         setVisibleToolIds(new Set(allTools.map(t => t.id)));
@@ -600,7 +609,7 @@ const ClinicalToolsHub = () => {
       ) : (
         <>
           {/* Sticky Search Bar */}
-          <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm pb-3 -mt-1 pt-1">
+          <div className="sticky top-[88px] md:top-16 z-10 bg-background/95 backdrop-blur-sm pb-3 -mt-1 pt-1">
             <div className="relative">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
@@ -627,7 +636,7 @@ const ClinicalToolsHub = () => {
           </div>
 
           {/* System Sidebar + Grid Layout */}
-          <div className="flex gap-6">
+          <div className="flex flex-col md:flex-row gap-4 md:gap-6">
             {/* Left: System Navigation — Desktop */}
             <nav className="hidden md:flex flex-col gap-px w-44 flex-shrink-0 sticky top-16 self-start max-h-[calc(100vh-5rem)] overflow-y-auto pr-1">
               <button
@@ -718,17 +727,17 @@ const ClinicalToolsHub = () => {
                         </div>
                         
                         {/* Tools Grid */}
-                        <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-1.5">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2">
                           {[...tools].sort((a, b) => a.name.localeCompare(b.name)).map((tool) => {
                             const isFav = isFavorite(tool.id);
                             return (
                               <button
                                 key={tool.id}
                                 onClick={() => handleToolSelect(tool.id)}
-                                className="flex flex-col items-center justify-center gap-1 p-2 aspect-square rounded-lg border border-border/40 bg-card hover:border-primary/30 hover:bg-accent/30 transition-all duration-150 cursor-pointer group relative text-center"
+                                className="flex flex-col items-center justify-center gap-1 p-3 aspect-square rounded-xl border border-border/40 bg-card hover:border-primary/30 hover:bg-accent/30 transition-all duration-150 cursor-pointer group relative text-center active:scale-[0.99]"
                               >
                                 {/* Abbreviation */}
-                                <span className="text-sm font-bold text-primary">{tool.name}</span>
+                                <span className="text-base font-bold text-primary">{tool.name}</span>
                                 {/* Full Name */}
                                 <span className="text-[11px] text-muted-foreground leading-tight line-clamp-2 text-center">{tool.fullName}</span>
                                 {/* Favorite */}

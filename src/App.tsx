@@ -4,7 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { ThemeProvider } from "next-themes";
 import { usePageTracking } from "@/hooks/usePageTracking";
 import { ConnectivityProvider, useConnectivityOptional } from "@/contexts/ConnectivityContext";
@@ -14,6 +14,7 @@ import { ConnectivityDebugPanel } from "@/components/ConnectivityDebugPanel";
 import { supabase } from "@/integrations/supabase/client";
 import { clearStaleSession, isConnectivityError } from "@/lib/supabase-helpers";
 import { toast } from "sonner";
+import { useMobileMode } from "@/hooks/useMobileMode";
 
 // Critical pages - load immediately
 import Index from "./pages/Index";
@@ -79,11 +80,7 @@ const RootRoute = () => {
   const [sessionChecked, setSessionChecked] = useState(false);
   const [hasSession, setHasSession] = useState(false);
 
-  const isMobile = useMemo(() => {
-    if (typeof window === "undefined") return false;
-    // Prefer viewport detection; this aligns with "mobile version" UX.
-    return window.matchMedia?.("(max-width: 768px)")?.matches ?? window.innerWidth <= 768;
-  }, []);
+  const isMobile = useMobileMode(768);
 
   useEffect(() => {
     let isMounted = true;

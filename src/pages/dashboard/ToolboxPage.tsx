@@ -8,9 +8,9 @@ interface ToolboxPageProps {
 
 const ToolboxPage = ({ profile }: ToolboxPageProps) => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {/* Compact Header */}
-      <div className="flex items-center justify-between">
+      <div className="hidden md:flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
             <BriefcaseMedical className="w-4.5 h-4.5 text-primary" />
